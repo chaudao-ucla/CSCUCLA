@@ -467,16 +467,6 @@ void FillALCTInfo::fill(const CSCALCTDigiCollection &alcts)
 
 		for (digiItr = range.first; digiItr!=range.second; digiItr++)
 		{
-			//TODO: Is an ALCT in ME11A/B meaningful?
-			/*
-			if (st == 1 && (ri == 1|| ri ==4))
-			{
-				// we need to manually adjust this because they don't for us
-				// getStrip returns a strip this time (different than before)
-				if(digiItr->getStrip() > CSCHelper::MAX_ME11B_STRIP) ri = 4;
-				else ri = 1; // resets ring in case where multiple clcts in ME11
-			}*/
-
 			ch_id		->push_back(CSCHelper::serialize(st, ri, ch, ec));
 			isValid		->push_back(CSCHelper::convertTo<size8>(digiItr->isValid(),"alct_isValid"));
 			quality		->push_back(CSCHelper::convertTo<size8>(digiItr->getQuality(),"alct_quality"));
@@ -506,24 +496,12 @@ void FillWireInfo::fill(const CSCWireDigiCollection &wires)
 
 		for (digiItr = range.first; digiItr!= range.second; digiItr++)
 		{
-			// TODO: Is an ALCT in ME11A/B meaningful?
-			/*
-			if (st == 1 && (ri == 1|| ri ==4))
-			{
-				// we need to manually adjust this because they don't for us
-				// getStrip returns a strip this time (different than before)
-				if(digiItr->getStrip() > CSCHelper::MAX_ME11B_STRIP) ri = 4;
-				else ri = 1; // resets ring in case where multiple clcts in ME11
-			}
-			*/
-
 			ch_id			->push_back(CSCHelper::serialize(st, ri, ch, ec));
 			group			->push_back(digiItr->getWireGroup());					
 			lay				->push_back(CSCHelper::convertTo<size8>(id.layer(), "wire_lay"));
 			timeBin			->push_back(digiItr->getTimeBin());
 			timeBinWord		->push_back(digiItr->getTimeBinWord());
 			BX				->push_back(digiItr->getWireGroupBX());
-			//time_bins_on	->push_back(digiItr->getTimeBinsOn());
 		}
 	}
 }

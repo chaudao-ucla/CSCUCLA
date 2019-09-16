@@ -439,7 +439,7 @@ public:
 	mu_id = new vector<int>();
 	ch_id = new vector<int>();
 	pos_x = new vector<float>();
-	pos_y = new vector<float>();
+	pos_y = new vector<int>();
 	dxdz = new vector <float>();
 	dydz = new vector<float>();
 	chisq = new vector<float>();

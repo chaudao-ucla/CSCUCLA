@@ -520,6 +520,10 @@ CLCTCandidate::QUALITY_SORT CLCTCandidate::quality =
 	return false;
 };
 
+/**************************
+* ALCTCandidate
+***************************/
+
 ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern) : 
 	_kwg(kwg),
 	_pattern(pattern)
@@ -534,7 +538,7 @@ ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern) :
 	prev = 0;
 }
 
-ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern, ALCTCandidate* pred) : 
+ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern, ALCTCandidate* pred): 
 	ALCTCandidate(kwg, pattern)
 {
 	pred->next = this; 
@@ -571,10 +575,41 @@ ostream& operator<<(ostream& os, const ALCTCandidate* const c){
 	return os;
 }
 
+/**************************
+* ALCTCandidateCollection
+***************************/
 
-//
-// ChamberHits
-//
+void ALCTCandidateCollection::Fill(	std::vector<ALCTCandidate*> emulatedALCTs, 
+									unsigned int chamberHash)
+{
+	for (int i=0; i<emulatedALCTs.size(); i++)
+	{
+		ALCTCandidate* c = emulatedALCTS.at(i);
+		ch_id.push_back(chamberHash);
+		kwg.push_back(c->get_kwg());
+		first_bx.push_back(c->get_first_bx());
+		first_bx_corr.push_back(c->get_first_bx_corr());
+		quality.push_back(c->get_quality());
+		pattern.push_back(c->get_pattern());
+		track_number.push_back(c->get_tracknumber());
+	}
+}
+
+void ALCTCandidateCollection::Erase()
+{
+	ch_id.clear();
+	kwg.clear();
+	first_bx.clear();
+	first_bx_corr.clear();
+	quality.clear();
+	pattern.clear();
+	track_number.clear();
+}
+
+
+/**************************
+* ChamberHits
+***************************/
 
 ChamberHits::ChamberHits(unsigned int station, unsigned int ring,
 		unsigned int endcap, unsigned int chamber, bool isComparator) :
@@ -819,6 +854,10 @@ ChamberHits& ChamberHits::operator -=(const CLCTCandidate& mi) {
 	}
 	return *this;
 }
+
+/**************************
+* ALCT_ChamberHits
+***************************/
 
 ALCT_ChamberHits::ALCT_ChamberHits(unsigned int station, unsigned int ring,
 		unsigned int chamber, unsigned int endcap, bool isWire, bool empty) :

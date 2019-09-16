@@ -148,6 +148,7 @@ class ALCTCandidate
 		unsigned int get_first_bx() const {return _first_bx;}
 		int get_quality() const {return _quality;}
 		int get_tracknumber() const {return _tracknumber;}
+		unsigned int get_first_bx_corr() const {return _first_bx_corr;}
 
 		void set_kwg(unsigned int kwg) {_kwg = kwg;}
 		void set_first_bx(unsigned int first_bx) {_first_bx = first_bx;}
@@ -171,6 +172,32 @@ class ALCTCandidate
 		bool _isValid;
 		unsigned int _first_bx_corr;
 };
+
+class ALCTCandidateCollection
+{
+	public:
+		std::vector<int> ch_id; 
+		std::vector<int> kwg;
+		std::vector<int> first_bx;
+		std::vector<int> first_bx_corr;
+		std::vector<int> quality; 
+		std::vector<int> pattern;
+		std::vector<int> track_number;
+
+	ALCTCandidateCollection(TTree *t, int i)
+	{
+		t->Branch("emulation_ch_id", &ch_id);
+		t->Branch("emulation_kwg", &kwg);
+		t->Branch("enumation_first_bx", &first_bx);
+		t->Branch("emulation_first_bx_corr", &first_bx_corr);
+		t->Branch("emulation_quality", &quality);
+		t->Branch("emulation_pattern", &pattern);
+		t->Branch("emulation_track_number", &track_number);
+	}
+
+	void Fill(std::vector<ALCTCandidate*> emulatedALCTs, unsigned int chamberHash);
+	void Erase(); 
+}
 
 /* @brief Encapsulates hit information for recorded event
  * in a chamber, identified by its station, ring, endcap and chamber
