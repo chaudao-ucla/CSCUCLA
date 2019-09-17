@@ -66,6 +66,7 @@ int ALCTEmulationTreeCreator::run(string inputfile, string outputfile, int start
 	CSCInfo::LCTs lcts(t);
     CSCInfo::Wires wires(t);
 	CSCInfo::Segments segments(t); 
+	ALCTCandidateCollection emulated_alcts(alct_t_emu); 
 
     /**********************
 	 * EVENT LOOP
@@ -85,7 +86,8 @@ int ALCTEmulationTreeCreator::run(string inputfile, string outputfile, int start
 		if(!(i%100)) printf("%3.2f%% Done --- Processed %u Events\n\n", 100.*(i-start)/(end-start), i-start);
 
 		t->GetEntry(i);
-
+		emulated_alcts.Erase();
+		
 		/**********************
 	 	* CHAMBER LOOP
 	 	**********************/
@@ -144,6 +146,8 @@ int ALCTEmulationTreeCreator::run(string inputfile, string outputfile, int start
 			ghostBuster(end_vec,config);
 			extract_sort_cut(end_vec,out_vec);
 
+			emulated_alcts.Fill(out_vec,chamberHash);
+
 			/**********************
 	 		* MEMORY LEAK CLEANUP
 	 		**********************/
@@ -152,16 +156,16 @@ int ALCTEmulationTreeCreator::run(string inputfile, string outputfile, int start
 			wipe(cvec);
 
 		}
-		//alct_t_emu->Fill();
+		alct_t_emu->Fill();
 	}
 	
 
-	//outF->cd();
-	//alct_t_emu->Write();
+	outF->cd();
+	alct_t_emu->Write();
 
-	//printf("Wrote to file: %s\n",outputfile.c_str());
+	printf("Wrote to file: %s\n",outputfile.c_str());
 
-	//auto t2 = std::chrono::high_resolution_clock::now();
-	//cout << "Time elapsed: " << chrono::duration_cast<chrono::seconds>(t2-t1).count() << " s" << endl;
+	auto t2 = std::chrono::high_resolution_clock::now();
+	cout << "Time elapsed: " << chrono::duration_cast<chrono::seconds>(t2-t1).count() << " s" << endl;
 	return 0;
 }

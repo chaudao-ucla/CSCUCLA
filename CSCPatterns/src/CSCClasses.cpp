@@ -534,24 +534,13 @@ ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern) :
 	_quality = 0; 
 	_tracknumber = 0; 
 
-	next = 0;
-	prev = 0;
-}
-
-ALCTCandidate::ALCTCandidate(unsigned int kwg, int pattern, ALCTCandidate* pred): 
-	ALCTCandidate(kwg, pattern)
-{
-	pred->next = this; 
-	this->prev = pred; 
+	//next = 0;
+	//prev = 0;
 }
 
 void ALCTCandidate::nix()
 {
 	this->_isValid = false;
-	ALCTCandidate * previous = this->prev;
-	ALCTCandidate * following = this->next; 
-	if (previous != NULL) previous->next = this->next;
-	if (following!= NULL) following->prev = this->prev;
 	delete this; 
 }
 
@@ -584,14 +573,13 @@ void ALCTCandidateCollection::Fill(	std::vector<ALCTCandidate*> emulatedALCTs,
 {
 	for (int i=0; i<emulatedALCTs.size(); i++)
 	{
-		ALCTCandidate* c = emulatedALCTS.at(i);
 		ch_id.push_back(chamberHash);
-		kwg.push_back(c->get_kwg());
-		first_bx.push_back(c->get_first_bx());
-		first_bx_corr.push_back(c->get_first_bx_corr());
-		quality.push_back(c->get_quality());
-		pattern.push_back(c->get_pattern());
-		track_number.push_back(c->get_tracknumber());
+		kwg.push_back(emulatedALCTs.at(i)->get_kwg());
+		first_bx.push_back(emulatedALCTs.at(i)->get_first_bx());
+		first_bx_corr.push_back(emulatedALCTs.at(i)->get_first_bx_corr());
+		quality.push_back(emulatedALCTs.at(i)->get_quality());
+		pattern.push_back(emulatedALCTs.at(i)->get_pattern());
+		track_number.push_back(emulatedALCTs.at(i)->get_tracknumber());
 	}
 }
 

@@ -11,7 +11,7 @@
 #include "../include/Processor.h"
 
 class ALCTEmulationAnalyzer : public Processor {
-    int run(std::string inputfile, int start = 0, int end = -1);
+    int run(std::string inputfile, std::string outputfile, int start = 0, int end = -1);
 };
 
 #endif

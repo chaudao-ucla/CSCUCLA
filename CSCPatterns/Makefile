@@ -1,4 +1,4 @@
-FLAGS=-std=c++11 -g -Wall -fPIC 
+FLAGS=-std=c++11 -O5 -Wall -fPIC 
 #flags necessary to compile an executable which contains access to root libraries
 ROOTFLAGS=`root-config --cflags --libs` -L$(ROOTSYS)/lib
 

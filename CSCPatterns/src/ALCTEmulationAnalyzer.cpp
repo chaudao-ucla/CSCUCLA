@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     return p.main(argc, argv);
 }
 
-int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
+int ALCTEmulationAnalyzer::run(string inputfile, string outputfile, int start, int end)
 {
 	/**********************
 	 * TREE INITIALIZATION
@@ -95,6 +95,7 @@ int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
 	int track_match[3] = {0,0,0};
 	int track_unmatch[3] = {0,0,0};
 	bool flag_vec[alcts.size()];
+	int times[4] = {0,0,0,0}; 
 	for (int i = 0; i< alcts.size(); i++)
 	{
 		flag_vec[i] = false; 
@@ -161,10 +162,21 @@ int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
 	 		* RUNNING ALGORITHM
 	 		**********************/
 
+			auto t_init = std::chrono::high_resolution_clock::now(); 
 			trig_and_find(cvec, config, end_vec);
+			auto t_fin = std::chrono::high_resolution_clock::now(); 
+			times[0]+=(int) chrono::duration_cast<chrono::microseconds>(t_fin-t_init).count();
+
+			t_init = std::chrono::high_resolution_clock::now();
 			ghostBuster(end_vec,config);
+			t_fin = std::chrono::high_resolution_clock::now(); 
+			times[1]+= (int)chrono::duration_cast<chrono::microseconds>(t_fin-t_init).count();
 			//extract(end_vec,out_vec);
+
+			t_init = std::chrono::high_resolution_clock::now();
 			extract_sort_cut(end_vec,out_vec);
+			t_fin = std::chrono::high_resolution_clock::now(); 
+			times[2]+= (int) chrono::duration_cast<chrono::microseconds>(t_fin-t_init).count();
 
 			num_tot_alct+=out_vec.size();
 
@@ -270,6 +282,7 @@ int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
 				num_alct++;
 			}
 			
+			
 			/**********************
 	 		* LCT TESTER (BEGIN)
 	 		**********************/
@@ -315,8 +328,11 @@ int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
 			/**********************
 	 		* MEMORY LEAK (BEGIN)
 	 		**********************/
+		 	t_init = std::chrono::high_resolution_clock::now();
 			wipe(out_vec);
 			wipe(cvec);
+			t_fin = std::chrono::high_resolution_clock::now(); 
+			times[3]+= (int) chrono::duration_cast<chrono::microseconds>(t_fin-t_init).count();
 			/**********************
 	 		* MEMORY LEAK (END)
 	 		**********************/
@@ -357,7 +373,8 @@ int ALCTEmulationAnalyzer::run(string inputfile, int start, int end)
 
 	//printf("Wrote to file: %s\n",outputfile.c_str());
 
-	//auto t2 = std::chrono::high_resolution_clock::now();
-	//cout << "Time elapsed: " << chrono::duration_cast<chrono::seconds>(t2-t1).count() << " s" << endl;
+	auto t2 = std::chrono::high_resolution_clock::now();
+	cout << "Time elapsed: " << chrono::duration_cast<chrono::seconds>(t2-t1).count() << " s" << endl;
+	cout << times[0] << " " << times[1] << " " << times[2] << " " << times[3] << endl;
 	return 0;
 }

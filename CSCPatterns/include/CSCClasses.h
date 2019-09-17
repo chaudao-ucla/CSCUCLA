@@ -135,12 +135,8 @@ class ALCTCandidate
 {
 	public:
 		ALCTCandidate(unsigned int kwg, int pattern);
-		ALCTCandidate(unsigned int kwg, int pattern, ALCTCandidate * pred);
 
 		//~ALCTCandidate();
-
-		ALCTCandidate* next;
-		ALCTCandidate* prev;
 
 		int get_pattern() const {return _pattern;}
 		bool isValid() const {return _isValid;}
@@ -184,7 +180,7 @@ class ALCTCandidateCollection
 		std::vector<int> pattern;
 		std::vector<int> track_number;
 
-	ALCTCandidateCollection(TTree *t, int i)
+	ALCTCandidateCollection(TTree *t)
 	{
 		t->Branch("emulation_ch_id", &ch_id);
 		t->Branch("emulation_kwg", &kwg);
@@ -197,7 +193,7 @@ class ALCTCandidateCollection
 
 	void Fill(std::vector<ALCTCandidate*> emulatedALCTs, unsigned int chamberHash);
 	void Erase(); 
-}
+};
 
 /* @brief Encapsulates hit information for recorded event
  * in a chamber, identified by its station, ring, endcap and chamber
